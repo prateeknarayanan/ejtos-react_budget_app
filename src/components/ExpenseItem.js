@@ -4,41 +4,34 @@ import { FaPlusCircle, FaTimesCircle } from 'react-icons/fa';
 import { MdDoNotDisturbOn } from 'react-icons/md';
 
 const ExpenseItem = (props) => {
-    const { dispatch, Currency} = useContext(AppContext);
+    const { dispatch, currency} = useContext(AppContext);
 
-    const handleDeleteItem = () => {
-        const item = {
-            name: props.name,
-        };
-
+    const handleDeleteExpense = () => {
         dispatch({
             type: 'DELETE_EXPENSE',
-            payload: item,
+            payload: props.id,
         });
     };
 
-    const handleIncreaseBudget = () => {
-
-        const item = {
-            name: props.name,
-            quantity: 10,
+    const increaseAllocation = (name) => {
+        const expense = {
+            name: name,
+            cost: 10,
         };
-
         dispatch({
             type: 'ADD_EXPENSE',
-            payload: item,
+            payload: expense
         });
     };
 
-    const handleDecreaseBudget = () => {
-        const item = {
-            name: props.name,
-            quantity: 10,
+    const decreaseAllocation = (name) => {
+        const expense = {
+            name: name,
+            cost: 10,
         };
-
         dispatch({
             type: 'RED_EXPENSE',
-            payload: item,
+            payload: expense
         });
     };
 
@@ -46,10 +39,10 @@ const ExpenseItem = (props) => {
     return (
         <tr>
         <td>{props.name}</td>
-        <td>{Currency}{parseInt(props.cost)}</td>
-        <td><FaPlusCircle size='2.2em' color="green" onClick={handleIncreaseBudget}></FaPlusCircle></td>
-        <td><MdDoNotDisturbOn size='2.2em' color="red" onClick={handleDecreaseBudget}></MdDoNotDisturbOn></td>
-        <td><FaTimesCircle size='2.2em' color="black" onClick={handleDeleteItem}></FaTimesCircle></td>
+        <td>{currency}{props.cost}</td>
+        <td><FaPlusCircle size='2.2em' color="green" onClick={event => increaseAllocation(props.name)}></FaPlusCircle></td>
+        <td><MdDoNotDisturbOn size='2.2em' color="red" onClick={event => decreaseAllocation(props.name)}></MdDoNotDisturbOn></td>
+        <td><FaTimesCircle size='2.2em' color="black" onClick={handleDeleteExpense}></FaTimesCircle></td>
         </tr>
     );
 };

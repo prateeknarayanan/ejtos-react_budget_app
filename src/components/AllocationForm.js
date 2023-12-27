@@ -2,47 +2,34 @@ import React, { useContext, useState } from 'react';
 import { AppContext } from '../context/AppContext';
 
 const AllocationForm = (props) => {
-    const { Currency, Budget, remaining, dispatch } = useContext(AppContext);
+    const { currency, remaining, dispatch } = useContext(AppContext);
 
     const [name, setName] = useState('');
     const [cost, setCost] = useState('');
     const [action, setAction] = useState('');
 
     const submitEvent = () => {
-        if(/^[0-9\b]+$/.test(cost)) 
-        {
-            const totalExpenses = remaining.reduce((total, item) => {
-                return (total += item.cost);
-            }, 0);
-            const remainder = parseInt(Budget) - totalExpenses;
-            if(cost <= remainder)
-            {
-                const expense = {
-                    name: name,
-                    cost: parseInt(cost),
-                };
-                if(action === "Reduce") {
-                    dispatch({
-                        type: 'RED_EXPENSE',
-                        payload: expense,
-                    });
-                } else {
-                        dispatch({
-                            type: 'ADD_EXPENSE',
-                            payload: expense,
-                        });
-                    }
-            }
-            else
-            {
-                alert(`The value can not exceed remaining funds ${Currency}${remainder}!`);
-            }
+        if(cost > remaining) {
+            alert("The value cannot exceed remaining funds  £"+remaining);
+            setCost("");
+            return;
         }
-        else
-        {
-            alert('The field accept only numbers value!');
-        }        
+    const expense = {
+        name: name,
+        cost: parseInt(cost),
     };
+    if(action === "Reduce") {
+        dispatch({
+            type: 'RED_EXPENSE',
+            payload: expense,
+        });
+    } else {
+            dispatch({
+                type: 'ADD_EXPENSE',
+                payload: expense,
+            });
+        }
+};
 
     return (
         <div>
@@ -69,7 +56,7 @@ const AllocationForm = (props) => {
                     <option   option value="Reduce" name="Reduce">Reduce</option>
                   </select>  
                   <span className="eco" style={{ marginLeft: '2rem', marginRight: '8px'}}></span>
-                    <span>{Currency}</span>
+                    <span>{currency}</span>
                     <input
                         required="required"
                         type='number'
